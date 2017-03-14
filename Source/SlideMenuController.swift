@@ -345,7 +345,11 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
         // Please to override it if necessary
         return true
     }
-    
+
+    open func canSwipeStart(with point: CGPoint) -> Bool {
+        return true
+    }
+
     open func track(_ trackAction: TrackAction) {
         // function is for tracking
         // Please to override it if necessary
@@ -374,7 +378,10 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
                 if LeftPanState.lastState != .ended &&  LeftPanState.lastState != .cancelled &&  LeftPanState.lastState != .failed {
                     return
                 }
-                
+
+                let startPoint = panGesture.location(in: view)
+                if !canSwipeStart(with: startPoint) { return }
+
                 if isLeftHidden() {
                     self.delegate?.leftWillOpen?()
                 } else {
@@ -382,7 +389,7 @@ open class SlideMenuController: UIViewController, UIGestureRecognizerDelegate {
                 }
                 
                 LeftPanState.frameAtStartOfPan = leftContainerView.frame
-                LeftPanState.startPointOfPan = panGesture.location(in: view)
+                LeftPanState.startPointOfPan = startPoint
                 LeftPanState.wasOpenAtStartOfPan = isLeftOpen()
                 LeftPanState.wasHiddenAtStartOfPan = isLeftHidden()
                 
